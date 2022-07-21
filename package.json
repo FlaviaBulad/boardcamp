@@ -1,0 +1,30 @@
+{
+  "name": "projeto15-boardcamp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./boardcamp-back/src/index.js",
+    "dev": "nodemon ./boardcamp-back/src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "joi": "^17.6.0",
+    "nodemon": "^2.0.19",
+    "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "prettier": "2.7.1"
+  },
+  "nodemonConfig": {
+    "ext": "js,coffee,json,env",
+    "watch": ".env"
+  }
+}
