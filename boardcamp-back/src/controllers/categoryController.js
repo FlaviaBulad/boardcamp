@@ -1,4 +1,3 @@
-import { func } from "joi";
 import connection from "../dbStrategy/postgres.js";
 
 export default async function getCategories(req, res) {
@@ -12,7 +11,5 @@ export default async function getCategories(req, res) {
 }
 
 export default async function createCategory(req, res){
-  const category = req.body;
-  
 
 }
