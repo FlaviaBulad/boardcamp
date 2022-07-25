@@ -106,4 +106,72 @@ INSERT INTO
   }
 }
 
-export async function finishRent() {}
+export async function finishRent(req, res) {
+  const { id } = req.params;
+
+  try {
+    const searchRental = await connection.query(
+      `SELECT * FROM rentals WHERE id = $1`,
+      [id]
+    );
+
+    if (searchRental.rowCount === 0) {
+      return res.sendStatus(404);
+    }
+
+    const rental = searchRental.rows[0];
+
+    if (rental.returnDate) {
+      return res.sendStatus(400);
+    } else {
+      const diff = new Date().getTime() - new Date(rental.rentDate).getTime();
+      const diffInDays = Math.floor(diff / (24 * 3600 * 1000));
+
+      let delayFee = 0;
+      if (diffInDays > rental.daysRented) {
+        const addicionalDays = diffInDays - rental.daysRented;
+        delayFee = addicionalDays * rental.originalPrice;
+        console.log("delayFee", addicionalDays);
+      }
+
+      await db.query(
+        `
+          UPDATE rentals 
+          SET "returnDate" = NOW(), "delayFee" = $1
+          WHERE id = $2    
+        `,
+        [delayFee, id]
+      );
+
+      res.sendStatus(200);
+    }
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+}
+
+export async function deleteRental(req, res) {
+  const { id } = req.params;
+
+  try {
+    const searchRentals = await db.query(
+      `SELECT * FROM rentals WHERE id = $1`,
+      [id]
+    );
+
+    if (searchRentals.rowCount === 0) {
+      return res.sendStatus(404);
+    } else {
+      const rental = searchRentals.rows[0];
+      if (!rental.returnDate) {
+        return res.sendStatus(400);
+      } else {
+        await db.query(`DELETE FROM rentals WHERE id = $1`, [id]);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+}
