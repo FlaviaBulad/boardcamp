@@ -1,7 +1,7 @@
 import categorySchema from "../schemas/categorySchema.js";
 import connection from "../dbStrategy/postgres.js";
 
-export default async function validateCategory(req, res, next) {
+export async function validateCategory(req, res, next) {
   const category = req.body;
   const validation = categorySchema.validate(category);
   if (validation.error) {
